@@ -1,0 +1,61 @@
+FROM ros:noetic_desktop
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update
+
+#common used packages
+RUN apt-get install -y ros-$ROS_DISTRO-grid-map ros-$ROS_DISTRO-move-base-flex \ 
+    libgeographic-dev ros-$ROS_DISTRO-geographic-msgs
+RUN apt-get install -y ros-$ROS_DISTRO-twist-mux ros-$ROS_DISTRO-rosbridge-server
+
+RUN apt-get install -y ros-$ROS_DISTRO-hardware-interface ros-$ROS_DISTRO-controller-manager \
+    ros-$ROS_DISTRO-control-toolbox ros-$ROS_DISTRO-ros-control ros-$ROS_DISTRO-rosparam-shortcuts ros-$ROS_DISTRO-realtime-tools
+
+# init catkin workspace
+RUN mkdir -p /catkin_ws/src
+RUN /bin/bash -c 'source /opt/ros/noetic/setup.bash; cd catkin_ws' 
+RUN echo "source /catkin_ws/devel/setup.bash" >> ~/.bashrc
+
+# DS4 driver
+RUN cd /catkin_ws/src \
+    && git clone -b noetic-devel https://github.com/alex-makarov/ds4_driver
+
+
+# rosmower packages
+RUN cd /catkin_ws/src \
+    && git clone https://github.com/HoverMower/rosmower_msgs \
+    && git clone https://github.com/HoverMower/oled_display_node \ 
+    && git clone https://github.com/HoverMower/ROSMower
+
+# ros_bno0x
+RUN apt-get install -y python3-pip
+RUN pip3 install adafruit-circuitpython-bno08x
+RUN cd /catkin_ws/src  \ 
+    && git clone https://github.com/PaddyCube/ros_bno08x
+
+# ublox driver
+RUN apt-get install -y ros-$ROS_DISTRO-ublox ros-$ROS_DISTRO-robot-localization
+RUN cd /catkin_ws/src \
+    && git clone https://github.com/HoverMower/ublox_2_odometry
+
+#LD06 Lidar
+RUN apt-get install -y libudev-dev
+RUN cd /catkin_ws/src \ 
+    && git clone  https://github.com/AlessioMorale/ld06_lidar
+
+# hoverboard_driver
+RUN cd /catkin_ws/src \
+    && git clone https://github.com/PaddyCube/hoverboard-driver
+    
+RUN /bin/bash -c 'source /opt/ros/noetic/setup.bash &&\
+    cd /catkin_ws &&\
+    catkin_make'
+
+# hovermower_base_controller
+RUN cd /catkin_ws/src \ 
+    && git clone https://github.com/HoverMower/ros_hovermower_base_controller
+
+RUN /bin/bash -c 'source /opt/ros/noetic/setup.bash &&\
+    cd /catkin_ws &&\
+    catkin_make'
+    

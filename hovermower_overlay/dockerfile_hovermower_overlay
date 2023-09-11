@@ -1,0 +1,8 @@
+FROM ros:hovermower_base
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN mkdir -p /overlay_ws/src
+COPY hovermower_overlay/init_hovermower_overlay.sh /overlay_ws
+RUN chmod -R 777 /overlay_ws/init_hovermower_overlay.sh
+
+RUN /bin/bash -c '. /overlay_ws/init_hovermower_overlay.sh'
