@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # clone all needed repos into overlay_ws
+mkdir -p /overlay_ws/src
 cd /overlay_ws/src
 
 git clone -b breadcrump_navigation https://github.com/HoverMower/open_mower_ros

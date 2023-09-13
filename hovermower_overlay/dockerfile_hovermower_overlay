@@ -5,4 +5,11 @@ RUN mkdir -p /overlay_ws/src
 COPY hovermower_overlay/init_hovermower_overlay.sh /overlay_ws
 RUN chmod -R 777 /overlay_ws/init_hovermower_overlay.sh
 
-RUN /bin/bash -c '. /overlay_ws/init_hovermower_overlay.sh'
+#don't run this here. Run it later after contaienr runs to reflect changes to mounted volumnes
+#RUN /bin/bash -c '. /overlay_ws/init_hovermower_overlay.sh'
+
+# Set up the work directory and entrypoint
+COPY /hovermower_overlay/entrypoint.sh /
+RUN chmod 777 entrypoint.sh
+WORKDIR /overlay_ws
+ENTRYPOINT ["/entrypoint.sh"]

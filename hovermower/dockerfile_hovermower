@@ -17,6 +17,10 @@ RUN /bin/bash -c 'source /opt/ros/noetic/setup.bash; cd catkin_ws'
 RUN echo "source /catkin_ws/devel/setup.bash" >> ~/.bashrc
 
 # DS4 driver
+RUN git clone https://github.com/naoki-mizuno/ds4drv --branch devel \
+    && cd ds4drv \
+    && mkdir -p ~/.local/lib/python3.8/site-packages \
+    && python3 setup.py install --prefix ~/.local
 RUN cd /catkin_ws/src \
     && git clone -b noetic-devel https://github.com/alex-makarov/ds4_driver
 
