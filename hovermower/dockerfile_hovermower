@@ -11,18 +11,22 @@ RUN apt-get install -y ros-$ROS_DISTRO-twist-mux ros-$ROS_DISTRO-rosbridge-serve
 RUN apt-get install -y ros-$ROS_DISTRO-hardware-interface ros-$ROS_DISTRO-controller-manager \
     ros-$ROS_DISTRO-control-toolbox ros-$ROS_DISTRO-ros-control ros-$ROS_DISTRO-rosparam-shortcuts ros-$ROS_DISTRO-realtime-tools
 
+RUN apt-get install -y ros-$ROS_DISTRO-tf2-web-republisher
+
+RUN apt-get install -y nano
+
 # init catkin workspace
 RUN mkdir -p /catkin_ws/src
 RUN /bin/bash -c 'source /opt/ros/noetic/setup.bash; cd catkin_ws' 
 RUN echo "source /catkin_ws/devel/setup.bash" >> ~/.bashrc
 
 # DS4 driver
-RUN git clone https://github.com/naoki-mizuno/ds4drv --branch devel \
+RUN git clone https://github.com/naoki-mizuno/ds4drv --branch devel  \
     && cd ds4drv \
     && mkdir -p ~/.local/lib/python3.8/site-packages \
     && python3 setup.py install --prefix ~/.local
 RUN cd /catkin_ws/src \
-    && git clone -b noetic-devel https://github.com/alex-makarov/ds4_driver
+    && git clone https://github.com/PaddyCube/ds4_driver
 
 
 # rosmower packages
@@ -42,10 +46,19 @@ RUN apt-get install -y ros-$ROS_DISTRO-ublox ros-$ROS_DISTRO-robot-localization
 RUN cd /catkin_ws/src \
     && git clone https://github.com/HoverMower/ublox_2_odometry
 
+#str2str for GPS
+RUN mkdir /str2str \
+    && cd /str2str \
+    && git clone https://github.com/rtklibexplorer/RTKLIB \
+    && cd /str2str/RTKLIB/app/consapp/str2str/gcc \
+    && make  \
+    && make install
+
+
 #LD06 Lidar
 RUN apt-get install -y libudev-dev
 RUN cd /catkin_ws/src \ 
-    && git clone  https://github.com/AlessioMorale/ld06_lidar
+    && git clone  https://github.com/PaddyCube/ld06_lidar
 
 # hoverboard_driver
 RUN cd /catkin_ws/src \
@@ -62,4 +75,6 @@ RUN cd /catkin_ws/src \
 RUN /bin/bash -c 'source /opt/ros/noetic/setup.bash &&\
     cd /catkin_ws &&\
     catkin_make'
+
+EXPOSE 4242
     
