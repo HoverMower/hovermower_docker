@@ -8,6 +8,9 @@ RUN apt-get install -y ros-$ROS_DISTRO-grid-map ros-$ROS_DISTRO-move-base-flex \
     libgeographic-dev ros-$ROS_DISTRO-geographic-msgs
 RUN apt-get install -y ros-$ROS_DISTRO-twist-mux ros-$ROS_DISTRO-rosbridge-server
 
+RUN apt-get install -y ros-$ROS_DISTRO-navigation ros-$ROS_DISTRO-move-base \
+    ros-$ROS_DISTRO-octomap-* ros-$ROS_DISTRO-dwa-local-planner ros-$ROS_DISTRO-global-planner \
+    ros-$ROS_DISTRO-teb-local-planner
 RUN apt-get install -y ros-$ROS_DISTRO-hardware-interface ros-$ROS_DISTRO-controller-manager \
     ros-$ROS_DISTRO-control-toolbox ros-$ROS_DISTRO-ros-control ros-$ROS_DISTRO-rosparam-shortcuts ros-$ROS_DISTRO-realtime-tools
 
@@ -36,7 +39,7 @@ RUN cd /catkin_ws/src \
     && git clone https://github.com/HoverMower/ROSMower
 
 # ros_bno0x
-RUN apt-get install -y python3-pip
+RUN apt-get install -y python3-pip python3-rpi.gpio i2c-tools
 RUN pip3 install adafruit-circuitpython-bno08x
 RUN cd /catkin_ws/src  \ 
     && git clone https://github.com/PaddyCube/ros_bno08x
