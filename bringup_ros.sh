@@ -7,5 +7,6 @@ docker run -it --net=host \
     --volume="$HOME/hovermower_overlay_ws:/overlay_ws:rw" \
     --privileged \
     --publish 4242:4242 \
+    --ulimit nofile=1024 \
     ros:hovermower_overlay \
     bash
